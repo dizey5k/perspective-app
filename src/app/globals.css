@@ -1,26 +1,55 @@
-@import "tailwindcss";
+/* Подключаем Tailwind v4 */
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Задаем нашу тему (Tailwind сам сгенерирует из них bg-fest-bg, text-fest-accent и т.д.) */
+@theme {
+  --color-fest-bg: #0a1519;
+  --color-fest-surface: #12252a;
+  --color-fest-border: rgba(255, 255, 255, 0.1);
+  --color-fest-accent: #d946ef;
+  --color-fest-blue: #3b82f6;
+  --color-fest-cyan: #06b6d4;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-fest-bg);
+  color: white;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Паттерн в виде тонкой сетки, как на макетах */
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Прячем скроллбар */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Эффект стеклянной карточки (пишем на чистом CSS, чтобы не воевать с @apply) */
+.glass-card {
+  background-color: rgba(18, 37, 42, 0.6);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-fest-border);
+  border-radius: 1rem;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* Кастомное свечение на фоне */
+.bg-impulse-glow {
+  background-image: radial-gradient(
+    circle at center,
+    rgba(59, 130, 246, 0.3) 0%,
+    rgba(10, 21, 25, 0) 70%
+  );
 }
