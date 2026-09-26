@@ -29,6 +29,15 @@ const institutesData = [
   { prefix: 'ispo', name: 'ИСПО' },
 ]
 
+// Список станций с повышенной квотой (по 3 команды)
+const HIGH_CAPACITY_STATIONS = [
+  'ПРОФ.event',
+  'ПРОФ.life',
+  'Звезда Политеха',
+  'Студенческий клуб',
+  'Общественный институт «Адаптеры»',
+]
+
 async function main() {
   console.log('🗑 Очищаем старую базу данных...')
 
@@ -49,7 +58,7 @@ async function main() {
       name: 'Общественный институт «Адаптеры»',
       description: 'Наставничество для первокурсников',
     },
-    { name: 'Турклуб Политеха «Грань»', description: 'Туризм и походы' },
+    // Турклуб удален
     {
       name: 'СЭО «Регрин»',
       description: 'Студенческое экологическое объединение',
@@ -104,11 +113,14 @@ async function main() {
   const quotasToInsert = []
   for (let round = 1; round <= 6; round++) {
     for (const union of insertedUnions) {
+      // Определяем квоту: 3 для избранных, 2 для остальных
+      const maxQuota = HIGH_CAPACITY_STATIONS.includes(union.name) ? 3 : 2
+
       quotasToInsert.push({
         roundNumber: round,
         unionId: union.id,
-        totalQuota: 3,
-        remainingQuota: 3,
+        totalQuota: maxQuota,
+        remainingQuota: maxQuota,
       })
     }
   }
