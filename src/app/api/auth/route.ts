@@ -6,19 +6,24 @@ import { eq } from 'drizzle-orm'
 
 export async function POST(req: Request) {
   try {
-    const { code } = await req.json()
-    if (!code)
+    const body = await req.json()
+    const code = body?.code
+
+    if (!code) {
       return NextResponse.json({ error: 'Введите код' }, { status: 400 })
+    }
 
     const [team] = await db
       .select()
       .from(teams)
       .where(eq(teams.code, code.trim()))
-    if (!team)
+
+    if (!team) {
       return NextResponse.json(
         { error: 'Неверный код команды' },
         { status: 401 },
       )
+    }
 
     const teamBookings = await db
       .select()
@@ -45,9 +50,11 @@ export async function POST(req: Request) {
       team: { id: team.id, name: team.name, isConfirmed: team.isConfirmed },
       currentBookings,
     })
-  } catch {
+  } catch (error) {
+    // ВЫВОДИМ РЕАЛЬНУЮ ОШИБКУ В ТЕРМИНАЛ ДОКЕРА
+    console.error('🔥 КРИТИЧЕСКАЯ ОШИБКА В /api/auth:', error)
     return NextResponse.json(
-      { error: 'Внутренняя ошибка сервера' },
+      { error: 'Внутренняя ошибка сервера', details: String(error) },
       { status: 500 },
     )
   }

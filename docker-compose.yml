@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   db:
     image: postgres:15-alpine
@@ -13,10 +14,15 @@ services:
   app:
     build: .
     restart: always
-    env_file:
-      - .env
+    environment:
+      # Прямое подключение к контейнеру базы по внутреннему порту 5432
+      - DATABASE_URL=postgres://fest_admin:fest_password@db:5432/fest_db?sslmode=disable
+      - ADMIN_SECRET_KEY=super-secret-fest-key-2026
+      - GOOGLE_SERVICE_ACCOUNT_EMAIL=app-652@perspective-festival.iam.gserviceaccount.com
+      - GOOGLE_SHEET_ID=1amGUwaWBrOyDJIPNxywuEfroP9xeLqbcLVmembksyu4
+      - GOOGLE_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCuHHFQayW+AIOG\nHsKMMgm0NEFJTDfgYM347uXqEeW0lTNzXtwMqiSgqpNU1IDrXElXk0M5bVBzigb7\n2/0U5TOVTc5j7v8SjSRTH4vd+kRELtKeQKvXYU9WgD+Jp9at8AtgjxKpLNqn0umQ\n7jDUXSgWgJlSz9pFr/ShaWsAMCjh0HiOf4SGgg3IJtC70w6UikHVjQFaY6vC3Tmh\nquHWJLO8FXyFBEwhwRaKFNLBPgGTeSiuCbC3c7rWfPtjdhh4fqH+U97c1ZXnkZFJ\nCaDXCoybIEacZzYDvUWTvu2yC2qLycJ+lyVyLU3NdR3CMJXVzUGp+yTv+XVzq48k\n9Ny2ZlkXAgMBAAECggEAM06lY7XXbui22WCaIvch3e0iKgfgVWoheFBqBzKT9sWa\n3k4fWUoQNhpeBTsD7JeK81gtkLAya4HKshBvQWeTblV50wAcQWq/QBGFRXoZAOCt\nZz4WhYci+pIbZyTDAgnBSIiQzrKtkpP4CSHv2LzE8fCefgVLRIrn82LdybXnbjdk\nuXxmrAJ3SIO8eT52I+WIQKQo0FiOIsMYHQ4o2uRy99qj88iaxAQLz6WFdRq7b+5H\n3Ur2geG6xnfkAjntOFkwkhv5BjBzcNKU90MEL42IVLWf+9iGneXMgkyN3U+rkWat\ntcJG8VA8zwBe4RAGWOp4p77utAm2UASjmq+Yhb7lCQKBgQDZ7DFzOyDiIr5IBskI\nxKcEMHlo6dLKn/Iq6DrVFZUNSbOAsEBv5qYURK4ATjeetAGG2NFu89Jdz5jFtKIO\nrwcVNTUE/cfPbk51akd+n8xUZZOAOlDQHQzbJWVJSPrR6ocXQ1CAEV/ow+UCztAY\nwDQ1ZMqY+Dd5vLWfrCTd1SP2TwKBgQDMiIjGWR4Db3G7zSif++M2WhcmCWEDc3uq\nSnUpOzY1ngF1YvU0LjybjpoFS98wTOc25FBJEfLB+Ql91qz3xog07gRfAJ4TIKeE\nRhmHaJqvnOy+TeENFtW2OBFAOdPrhfUFuN+gf7SckZwrZS2U2I7TrdC/rbTDQXn0\nHs99OMSGuQKBgQCvkrUwkqXmq3lEzHqxnsa1AF0A4soayAyy9xFXViEVaJi/iMER\npvGNiNvrkRkMuxgzzYHG85g8TqJWPzcFv4xkUM7bq5+NBuEdhjf9078rC/9vowwy\n8ATIlvNovOyfrWWTn38+/0CXZySeQ4OzPT+S+Ralce44HYrzDx1QwIVNzwKBgQCp\n13LkalpO9fsWvR1QBGW/232/eyhRKlN1rFCwBVhVm7iQVrVROFfhwL/LSB60yBdz\n8JFuq/XO91LXaS3GrtiqQz/j9+pL7eDNKTzHwag5zfCVcqxAJ0ceAl7o21xMBrfZ\noZQpfgJnxU5Ohr0cDdxEkOB4WvFw9m0jt3YLANnJGQKBgQCFlCNEQoEaGtAqaDxy\ncB4MKGUM8ea9HkL2BCRdRdEw9WHHu7NdVGk+cImA+trONJgZ8k7lu5ndhJJd4ZJ8\nLbIiKaPKi2Tpi0peVpUJtDMmmSH/OHQy+/KpI+lf8sZadta7E3+ph1iEepz2WFbm\nqMYJNGhlnw6YVx+xAqF+FkRSew==\n-----END PRIVATE KEY-----
     ports:
-      - "127.0.0.1:3010:3000"
+      - "3010:3000"
     depends_on:
       - db
 
