@@ -7,7 +7,7 @@ interface UnionCardProps {
   description: string
   remainingQuota: number
   isSelected: boolean
-  alreadySelectedRound: number | null // <-- Новое свойство
+  alreadySelectedRound: number | null
   onSelect: () => void
 }
 
@@ -28,7 +28,7 @@ export function UnionCard({
         'glass-card p-5 flex flex-col h-full transition-all duration-300',
         isSelected &&
           'border-fest-accent shadow-[0_0_20px_rgba(217,70,239,0.15)] bg-fest-accent/5',
-        isAlreadyBooked && 'opacity-80 border-fest-blue/20 bg-black/20', // Выделяем уже выбранные карточки
+        isAlreadyBooked && 'opacity-80 border-fest-blue/20 bg-black/20',
         isFull && !isAlreadyBooked && 'opacity-60 grayscale-[50%]',
       )}
     >
@@ -66,7 +66,7 @@ export function UnionCard({
       {/* Кнопка */}
       <button
         onClick={onSelect}
-        disabled={isFull || isSelected || isAlreadyBooked} // Блокируем клик, если станция уже в маршруте
+        disabled={isFull || isSelected || isAlreadyBooked}
         className={cn(
           'w-full mt-auto py-2.5 rounded-xl font-semibold transition-all duration-300',
           isSelected

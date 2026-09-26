@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { db } from '@/db'
-import { teams, bookings, auditLogs } from '@/db/schema'
-import { eq } from 'drizzle-orm'
+import { teams, bookings, auditLogs, unions } from '@/db/schema'
+import { eq, asc } from 'drizzle-orm'
+import { exportToGoogleSheet } from '@/lib/gsheets'
 
 export async function POST() {
   try {
@@ -26,9 +27,14 @@ export async function POST() {
         throw new Error('Расписание уже было подтверждено ранее')
 
       const teamBookings = await tx
-        .select()
+        .select({
+          roundNumber: bookings.roundNumber,
+          unionName: unions.name,
+        })
         .from(bookings)
+        .leftJoin(unions, eq(bookings.unionId, unions.id))
         .where(eq(bookings.teamId, teamId))
+        .orderBy(asc(bookings.roundNumber))
 
       if (teamBookings.length < 6) {
         throw new Error(
@@ -45,6 +51,12 @@ export async function POST() {
         teamId,
         action: 'CONFIRM',
       })
+
+      const resolvedStationNames = teamBookings.map(
+        (b) => b.unionName || 'Неизвестно',
+      )
+
+      exportToGoogleSheet(team.name, resolvedStationNames).catch(console.error)
 
       return NextResponse.json({ success: true })
     })

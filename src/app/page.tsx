@@ -165,7 +165,7 @@ export default function HomePage() {
               description={union.description}
               remainingQuota={remainingQuota}
               isSelected={isSelected}
-              alreadySelectedRound={alreadySelectedRound} // Передаем пропс
+              alreadySelectedRound={alreadySelectedRound}
               onSelect={() => handleBook(union.id)}
             />
           )

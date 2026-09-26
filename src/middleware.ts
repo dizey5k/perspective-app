@@ -4,8 +4,9 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
   const teamId = request.cookies.get('team_id')?.value
   const isLoginPage = request.nextUrl.pathname === '/login'
+  const isAdminPage = request.nextUrl.pathname === '/admin'
 
-  if (!teamId && !isLoginPage) {
+  if (!teamId && !isLoginPage && !isAdminPage) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 

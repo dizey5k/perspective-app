@@ -16,7 +16,6 @@ export default function LoginPage() {
 
     setIsLoading(true)
     try {
-      // Дергаем твой /api/auth
       const res = await fetch('/api/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -30,8 +29,8 @@ export default function LoginPage() {
       }
 
       toast.success(`Добро пожаловать, ${data.teamName}!`)
-      router.push('/') // Middleware теперь нас пропустит
-      router.refresh() // Форсируем обновление стейта страницы
+      router.push('/')
+      router.refresh()
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Ошибка авторизации'
       toast.error(message)

@@ -1,18 +1,26 @@
-version: "3.8"
-
+version: '3.8'
 services:
-  postgres:
+  db:
     image: postgres:15-alpine
-    container_name: fest_postgres
     restart: always
     environment:
       POSTGRES_USER: fest_admin
       POSTGRES_PASSWORD: fest_password
       POSTGRES_DB: fest_db
-    ports:
-      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5433:5432"
+
+  app:
+    build: .
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      - db
 
 volumes:
   pgdata:
