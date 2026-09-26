@@ -9,8 +9,6 @@ services:
       POSTGRES_DB: fest_db
     volumes:
       - pgdata:/var/lib/postgresql/data
-    ports:
-      - "127.0.0.1:5433:5432"
 
   app:
     build: .
@@ -18,7 +16,7 @@ services:
     env_file:
       - .env
     ports:
-      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:3010:3000"
     depends_on:
       - db
 
