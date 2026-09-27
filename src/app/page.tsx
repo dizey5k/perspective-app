@@ -8,12 +8,20 @@ import { useLiveQuotas } from '@/hooks/useLiveQuotas'
 import { fetchAppState, submitBooking, confirmSchedule } from '@/lib/api'
 import { RoundStepper } from '@/components/ui/RoundStepper'
 import { UnionCard } from '@/components/ui/UnionCard'
+import { UnionInfoModal } from '@/components/ui/UnionInfoModal'
 import { cn } from '@/lib/utils/utils'
 
 export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true)
 
+  const [infoModalUnion, setInfoModalUnion] = useState<{
+    name: string
+    description?: string | null
+    fullDescription?: string | null
+  } | null>(null)
+
   const {
+    team,
     unions,
     quotas,
     currentRound,
@@ -24,6 +32,7 @@ export default function HomePage() {
     setCurrentRound,
     setMyBookings,
     setIsConfirmed,
+    setTeam,
   } = useStore()
 
   useLiveQuotas()
@@ -31,6 +40,9 @@ export default function HomePage() {
   useEffect(() => {
     fetchAppState()
       .then((data) => {
+        if (data.team) {
+          setTeam(data.team)
+        }
         setUnions(data.unions)
         setQuotas(data.quotas)
         setMyBookings(data.myBookings || [])
@@ -42,7 +54,7 @@ export default function HomePage() {
         ),
       )
       .finally(() => setIsLoading(false))
-  }, [setUnions, setQuotas, setMyBookings, setIsConfirmed])
+  }, [setTeam, setUnions, setQuotas, setMyBookings, setIsConfirmed])
 
   const handleBook = async (unionId: number) => {
     if (isConfirmed) {
@@ -100,10 +112,25 @@ export default function HomePage() {
   const completedRounds = myBookings.map((b) => b.roundNumber)
   const isAllSelected = completedRounds.length === 6
 
+  // Получаем имя команды для приветствия
+  const teamDisplayName =
+    typeof team === 'string'
+      ? team
+      : (team as { name?: string } | null)?.name || 'Команда'
+
   return (
     <div className="relative min-h-screen pb-32 flex flex-col">
       {/* Шапка */}
-      <header className="pt-10 pb-4 px-4 text-center z-10">
+      <header className="pt-8 pb-4 px-4 text-center z-10">
+        {/* Исправленное приветствие команды */}
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/80 mb-3">
+          <span className="w-1.5 h-1.5 rounded-full bg-fest-accent animate-pulse" />
+          <span>
+            Добро пожаловать, Лидеры{' '}
+            <b className="text-white">{teamDisplayName}</b>!
+          </span>
+        </div>
+
         <p className="text-fest-accent text-xs font-bold tracking-widest uppercase mb-2">
           XXVIII Студенческая Перспектива
         </p>
@@ -115,7 +142,7 @@ export default function HomePage() {
         </p>
       </header>
 
-      {/* Степпер (Липкий, чтобы всегда был под рукой при скролле) */}
+      {/* Степпер */}
       <div className="sticky top-0 z-20 bg-fest-bg/80 backdrop-blur-md px-4 py-2 border-b border-white/5">
         <div className="mb-2 text-center text-sm font-semibold text-white/80">
           Круг {currentRound} из 6
@@ -127,7 +154,7 @@ export default function HomePage() {
         />
       </div>
 
-      {/* НОВЫЙ БЛОК: Информационная подсказка */}
+      {/* Информационная подсказка */}
       <div className="px-4 mt-4 z-10">
         <div className="glass-card bg-fest-blue/5 border-fest-blue/20 p-4 flex gap-3 items-start">
           <Info className="w-5 h-5 text-fest-blue shrink-0 mt-0.5" />
@@ -167,12 +194,20 @@ export default function HomePage() {
               isSelected={isSelected}
               alreadySelectedRound={alreadySelectedRound}
               onSelect={() => handleBook(union.id)}
+              onOpenInfo={() =>
+                setInfoModalUnion({
+                  name: union.name,
+                  description: union.description,
+                  fullDescription: (union as { fullDescription?: string })
+                    .fullDescription,
+                })
+              }
             />
           )
         })}
       </div>
 
-      {/* Плавающая панель подтверждения расписания */}
+      {/* Панель подтверждения */}
       <div
         className={cn(
           'fixed bottom-0 left-0 right-0 p-4 bg-fest-bg/90 backdrop-blur-xl border-t border-fest-border z-30 transition-transform duration-500',
@@ -196,6 +231,15 @@ export default function HomePage() {
           )}
         </div>
       </div>
+
+      {/* Модальное окно с описанием */}
+      <UnionInfoModal
+        isOpen={Boolean(infoModalUnion)}
+        onClose={() => setInfoModalUnion(null)}
+        name={infoModalUnion?.name ?? ''}
+        description={infoModalUnion?.description}
+        fullDescription={infoModalUnion?.fullDescription}
+      />
     </div>
   )
 }

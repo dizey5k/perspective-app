@@ -4,6 +4,7 @@ export type Union = {
   id: number
   name: string
   description: string
+  fullDescription?: string | null
 }
 
 export type Quota = {
@@ -18,7 +19,14 @@ export type Booking = {
   unionId: number
 }
 
+export type Team = {
+  id: number
+  name: string
+  isConfirmed: boolean
+}
+
 interface AppState {
+  team: Team | null
   unions: Union[]
   quotas: Quota[]
   currentRound: number
@@ -26,6 +34,7 @@ interface AppState {
   isConfirmed: boolean
 
   // Actions
+  setTeam: (team: Team | null) => void
   setUnions: (unions: Union[]) => void
   setQuotas: (quotas: Quota[]) => void
   updateQuota: (
@@ -39,12 +48,14 @@ interface AppState {
 }
 
 export const useStore = create<AppState>((set) => ({
+  team: null,
   unions: [],
   quotas: [],
   currentRound: 1,
   myBookings: [],
   isConfirmed: false,
 
+  setTeam: (team) => set({ team }),
   setUnions: (unions) => set({ unions }),
   setQuotas: (quotas) => set({ quotas }),
 

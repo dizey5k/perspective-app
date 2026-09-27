@@ -1,14 +1,16 @@
 'use client'
+
 import { cn } from '@/lib/utils/utils'
-import { Check, Route } from 'lucide-react'
+import { Check, HelpCircle, Route } from 'lucide-react'
 
 interface UnionCardProps {
   name: string
-  description: string
+  description: string | null
   remainingQuota: number
   isSelected: boolean
   alreadySelectedRound: number | null
   onSelect: () => void
+  onOpenInfo: () => void
 }
 
 export function UnionCard({
@@ -18,6 +20,7 @@ export function UnionCard({
   isSelected,
   alreadySelectedRound,
   onSelect,
+  onOpenInfo,
 }: UnionCardProps) {
   const isFull = remainingQuota === 0 && !isSelected
   const isAlreadyBooked = alreadySelectedRound !== null
@@ -32,9 +35,27 @@ export function UnionCard({
         isFull && !isAlreadyBooked && 'opacity-60 grayscale-[50%]',
       )}
     >
-      <div className="flex justify-between items-start gap-4 flex-1 mb-4">
-        <div>
-          <h3 className="font-bold text-lg leading-tight text-white">{name}</h3>
+      <div className="flex justify-between items-start gap-3 flex-1 mb-4">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <h3 className="font-bold text-lg leading-tight text-white truncate">
+              {name}
+            </h3>
+
+            {/* Иконка вопроса */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                onOpenInfo()
+              }}
+              title="Подробнее об объединении"
+              className="p-1 rounded-full text-white/40 hover:text-fest-accent hover:bg-white/5 transition-all shrink-0 active:scale-95"
+            >
+              <HelpCircle className="w-4 h-4" />
+            </button>
+          </div>
+
           <p className="text-sm text-white/60 mt-2 line-clamp-2">
             {description}
           </p>
@@ -63,7 +84,7 @@ export function UnionCard({
         </div>
       </div>
 
-      {/* Кнопка */}
+      {/* Кнопка выбора */}
       <button
         onClick={onSelect}
         disabled={isFull || isSelected || isAlreadyBooked}

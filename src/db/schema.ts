@@ -23,6 +23,7 @@ export const unions = pgTable('unions', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
   description: text('description'),
+  fullDescription: text('full_description'),
 })
 
 // Таблица квот (сколько мест у объединения в конкретном круге)

@@ -44,14 +44,20 @@ export async function POST(req: Request) {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
+      maxAge: 60 * 60 * 24 * 3,
     })
 
     return NextResponse.json({
-      team: { id: team.id, name: team.name, isConfirmed: team.isConfirmed },
+      team: {
+        id: team.id,
+        name: team.name,
+        isConfirmed: Boolean(
+          team.isConfirmed ?? (team as Record<string, unknown>).is_confirmed,
+        ),
+      },
       currentBookings,
     })
   } catch (error) {
-    // ВЫВОДИМ РЕАЛЬНУЮ ОШИБКУ В ТЕРМИНАЛ ДОКЕРА
     console.error('🔥 КРИТИЧЕСКАЯ ОШИБКА В /api/auth:', error)
     return NextResponse.json(
       { error: 'Внутренняя ошибка сервера', details: String(error) },

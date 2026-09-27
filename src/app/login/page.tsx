@@ -28,7 +28,6 @@ export default function LoginPage() {
         throw new Error(data.error || 'Неверный код доступа')
       }
 
-      toast.success(`Добро пожаловать, ${data.teamName}!`)
       router.push('/')
       router.refresh()
     } catch (err: unknown) {

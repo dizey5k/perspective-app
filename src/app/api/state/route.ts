@@ -16,17 +16,28 @@ export async function GET() {
 
     let myBookings: { roundNumber: number; unionId: number }[] = []
     let isConfirmed = false
+    let currentTeam: { id: number; name: string; isConfirmed: boolean } | null =
+      null
 
     if (teamIdStr) {
-      const teamId = parseInt(teamIdStr)
+      const teamId = parseInt(teamIdStr, 10)
 
       const [teamData] = await db
-        .select({ isConfirmed: teams.isConfirmed })
+        .select({
+          id: teams.id,
+          name: teams.name,
+          isConfirmed: teams.isConfirmed,
+        })
         .from(teams)
         .where(eq(teams.id, teamId))
 
       if (teamData) {
         isConfirmed = teamData.isConfirmed ?? false
+        currentTeam = {
+          id: teamData.id,
+          name: teamData.name,
+          isConfirmed,
+        }
       }
 
       myBookings = await db
@@ -39,6 +50,7 @@ export async function GET() {
     }
 
     return NextResponse.json({
+      team: currentTeam,
       unions: allUnions,
       quotas: allQuotas,
       myBookings,
