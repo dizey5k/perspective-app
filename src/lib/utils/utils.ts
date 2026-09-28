@@ -1,4 +1,4 @@
-const prefixes = ['impulse', 'persp']
+const prefixes = ['impulse', 'perspective']
 
 export function generateTeamCode(institutePrefix: string): string {
   const prefix = prefixes[Math.floor(Math.random() * prefixes.length)]

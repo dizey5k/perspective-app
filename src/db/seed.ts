@@ -16,38 +16,38 @@ const pool = new Pool({
 
 const db = drizzle(pool, { schema })
 
-const institutesData = [
-  { prefix: 'isi', name: 'ИСИ' },
-  { prefix: 'ie', name: 'ИЭ' },
-  { prefix: 'immit', name: 'ИММиТ' },
-  { prefix: 'ipmeit', name: 'ИПМЭиТ' },
-  { prefix: 'gi', name: 'ГИ' },
-  { prefix: 'ibsib', name: 'ИБСиБ' },
-  { prefix: 'ieit', name: 'ИЭиТ' },
-  { prefix: 'iknk', name: 'ИКНК' },
-  { prefix: 'fizmeh', name: 'ФизМех' },
-  { prefix: 'ispo', name: 'ИСПО' },
+const instituteConfigs = [
+  { prefix: 'isi', name: 'ИСИ', count: 7 },
+  { prefix: 'ie', name: 'ИЭ', count: 5 },
+  { prefix: 'immit', name: 'ИММиТ', count: 6 },
+  { prefix: 'ipmeit', name: 'ИПМЭиТ', count: 9 },
+  { prefix: 'gi', name: 'ГИ', count: 3 },
+  { prefix: 'ibsib', name: 'ИБСиБ', count: 2 },
+  { prefix: 'fizmeh', name: 'ФизМех', count: 5 },
+  { prefix: 'iknk', name: 'ИКНК', count: 9 },
+  { prefix: 'ispo', name: 'ИСПО', count: 5 },
 ]
 
-// Список станций с повышенной квотой (по 3 команды)
 const HIGH_CAPACITY_STATIONS = [
   'ПРОФ.event',
   'ПРОФ.life',
   'Звезда Политеха',
   'Студенческий клуб',
+  'ОИ "Адаптеры"',
   'Общественный институт «Адаптеры»',
 ]
 
 async function main() {
-  console.log('🗑 Очищаем старую базу данных...')
+  console.log('🗑 Очищаем старые данные...')
 
+  // Удаляем в строгом порядке foreign keys
   await db.delete(schema.auditLogs)
   await db.delete(schema.bookings)
   await db.delete(schema.roundQuotas)
   await db.delete(schema.teams)
   await db.delete(schema.unions)
 
-  console.log('🌱 Начинаем заливку новых данных...')
+  console.log('🌱 Инициализация объединений и квот...')
 
   const unionsData = [
     {
@@ -231,12 +231,11 @@ async function main() {
     .values(unionsData)
     .returning()
 
+  // Формируем квоты на 6 кругов
   const quotasToInsert = []
   for (let round = 1; round <= 6; round++) {
     for (const union of insertedUnions) {
-      // Определяем квоту: 3 для избранных, 2 для остальных
       const maxQuota = HIGH_CAPACITY_STATIONS.includes(union.name) ? 3 : 2
-
       quotasToInsert.push({
         roundNumber: round,
         unionId: union.id,
@@ -247,35 +246,53 @@ async function main() {
   }
   await db.insert(schema.roundQuotas).values(quotasToInsert)
 
-  const teamsToInsert = []
-  const instituteCounts: Record<string, number> = {}
+  console.log('🎲 Генерация команд и уникальных кодов...')
 
-  for (let i = 0; i < 58; i++) {
-    const inst = institutesData[i % institutesData.length]
+  const generatedCodes = new Set<string>()
+  const teamsToInsert: { name: string; code: string }[] = []
 
-    instituteCounts[inst.prefix] = (instituteCounts[inst.prefix] || 0) + 1
+  for (const inst of instituteConfigs) {
+    for (let i = 1; i <= inst.count; i++) {
+      let code = generateTeamCode(inst.prefix)
 
-    teamsToInsert.push({
-      name: `Команда ${inst.name} #${instituteCounts[inst.prefix]}`,
-      code: generateTeamCode(inst.prefix),
-    })
+      // Исключаем случайные коллизии кодов
+      while (generatedCodes.has(code)) {
+        code = generateTeamCode(inst.prefix)
+      }
+      generatedCodes.add(code)
+
+      teamsToInsert.push({
+        name: `Команда ${inst.name} #${i}`,
+        code,
+      })
+    }
   }
+
   const insertedTeams = await db
     .insert(schema.teams)
     .values(teamsToInsert)
     .returning()
 
-  console.log(`✅ Успешно! Создано объединений: ${insertedUnions.length}`)
-  console.log(`✅ Успешно! Создано квот: ${quotasToInsert.length}`)
-  console.log(`✅ Успешно! Создано команд: ${insertedTeams.length}`)
+  console.log(`\n✅ База данных обновлена!`)
+  console.log(`• Объединений: ${insertedUnions.length}`)
+  console.log(`• Квот (на 6 кругов): ${quotasToInsert.length}`)
+  console.log(`• Команд создано: ${insertedTeams.length}\n`)
 
-  console.log('\n--- КОДЫ КОМАНД ДЛЯ ОРГАНИЗАТОРОВ ---')
+  console.log('--- ТАБЛИЦА КОДОВ КОМАНД ---')
   console.table(
     insertedTeams.map((t) => ({
-      Название: t.name,
-      'Пароль для входа': t.code,
+      Команда: t.name,
+      Код: t.code,
     })),
   )
+
+  console.log('\n--- ТЕКСТОВЫЙ СПИСОК ДЛЯ ТЕЛЕГРАМА ---')
+  for (const inst of instituteConfigs) {
+    console.log(`\n${inst.name}:`)
+    insertedTeams
+      .filter((t) => t.name.startsWith(`Команда ${inst.name}`))
+      .forEach((t) => console.log(`${t.name}: ${t.code}`))
+  }
 
   process.exit(0)
 }
