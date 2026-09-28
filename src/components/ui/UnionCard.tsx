@@ -5,7 +5,6 @@ import { HelpCircle } from 'lucide-react'
 
 interface UnionCardProps {
   name: string
-  description: string | null
   remainingQuota: number
   isSelected: boolean
   alreadySelectedRound: number | null
@@ -15,7 +14,6 @@ interface UnionCardProps {
 
 export function UnionCard({
   name,
-  description,
   remainingQuota,
   isSelected,
   alreadySelectedRound,
@@ -52,10 +50,6 @@ export function UnionCard({
             <HelpCircle className="w-3.5 h-3.5" />
           </button>
         </div>
-
-        <p className="text-xs text-white/60 line-clamp-2 leading-relaxed mb-4">
-          {description}
-        </p>
       </div>
 
       <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2">
