@@ -256,7 +256,6 @@ export default function HomePage() {
         isOpen={Boolean(infoModalUnion)}
         onClose={() => setInfoModalUnion(null)}
         name={infoModalUnion?.name ?? ''}
-        description={infoModalUnion?.description}
         fullDescription={infoModalUnion?.fullDescription}
       />
     </div>
