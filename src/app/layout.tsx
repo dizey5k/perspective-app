@@ -12,6 +12,11 @@ const impulseFont = localFont({
 export const metadata: Metadata = {
   title: 'Импульс | XXVIII Студенческая Перспектива',
   description: 'Система распределения станций для студенческих команд',
+  icons: {
+    icon: '/icon/logo.svg',
+    shortcut: '/icon/logo.svg',
+    apple: '/icon/logo.svg',
+  },
 }
 
 export default function RootLayout({
