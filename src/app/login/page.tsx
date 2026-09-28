@@ -38,24 +38,24 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md glass-card p-8 flex flex-col items-center relative overflow-hidden border-white/15">
+      <div className="w-full max-w-md glass-card p-6 sm:p-8 flex flex-col items-center relative overflow-hidden border-white/15">
         <div className="mb-4">
           <Image
             src="/icon/logo.svg"
             alt="ПРОФ"
-            width={70}
-            height={70}
+            width={64}
+            height={64}
             loading="eager"
             fetchPriority="high"
-            className="w-20 h-20 object-contain drop-shadow-[0_0_15px_rgba(39,204,210,0.5)]"
+            className="w-14 h-14 object-contain drop-shadow-[0_0_15px_rgba(39,204,210,0.5)]"
           />
         </div>
 
-        <div className="text-center mb-8 z-10">
-          <p className="text-[#F6AFFD] text-xs font-bold tracking-[0.25em] uppercase mb-2">
+        <div className="text-center mb-6 sm:mb-8 z-10">
+          <p className="text-[#F6AFFD] text-[10px] sm:text-xs font-bold tracking-[0.25em] uppercase mb-2">
             XXVIII Студенческая Перспектива
           </p>
-          <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-[#27CCD2] to-[#F6AFFD] uppercase tracking-wider drop-shadow-[0_0_20px_rgba(39,204,210,0.4)]">
+          <h1 className="font-impulse text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-[#27CCD2] to-[#F6AFFD] uppercase tracking-wider drop-shadow-[0_0_20px_rgba(39,204,210,0.4)]">
             Импульс
           </h1>
         </div>
@@ -73,7 +73,7 @@ export default function LoginPage() {
               value={code}
               onChange={(e) => setCode(e.target.value)}
               placeholder="Введите код (например: impulse-iknk-47g)"
-              className="w-full pl-11 pr-4 py-3.5 bg-black/40 border border-white/15 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-[#27CCD2] focus:ring-1 focus:ring-[#27CCD2] transition-all"
+              className="w-full pl-11 pr-4 py-3.5 bg-black/40 border border-white/15 rounded-xl text-white placeholder:text-white/30 text-sm focus:outline-none focus:border-[#27CCD2] focus:ring-1 focus:ring-[#27CCD2] transition-all"
               autoComplete="off"
             />
           </div>
@@ -81,7 +81,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading || !code.trim()}
-            className="w-full py-3.5 mt-2 rounded-xl flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider text-[#042222] bg-gradient-to-r from-[#415FFB] via-[#27CCD2] to-[#F6AFFD] shadow-[0_0_20px_rgba(39,204,210,0.4)] hover:opacity-95 active:scale-95 disabled:opacity-50 transition-all"
+            className="w-full py-3.5 mt-2 rounded-xl flex items-center justify-center gap-2 font-black text-xs uppercase tracking-wider text-[#042222] bg-gradient-to-r from-[#415FFB] via-[#27CCD2] to-[#F6AFFD] shadow-[0_0_20px_rgba(39,204,210,0.4)] hover:opacity-95 active:scale-95 disabled:opacity-50 transition-all cursor-pointer"
           >
             {isLoading ? (
               <div className="w-5 h-5 border-2 border-[#042222] border-t-transparent rounded-full animate-spin" />

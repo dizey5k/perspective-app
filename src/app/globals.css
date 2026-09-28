@@ -2,7 +2,7 @@
 
 @theme {
   --font-sans:
-    var(--font-impulse), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
     sans-serif;
   --font-impulse: var(--font-impulse);
 
@@ -15,13 +15,16 @@
   --color-fest-navy: #3259a6;
 }
 
+html,
 body {
+  font-family: var(--font-sans);
   background-color: #042222;
   color: #ffffff;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  width: 100%;
 }
 
 /* Стеклянные карточки */
@@ -85,6 +88,10 @@ body {
   border: 1px solid rgba(246, 175, 253, 0.1);
   border-radius: 50%;
   pointer-events: none;
+}
+
+.font-impulse {
+  font-family: var(--font-impulse), sans-serif;
 }
 
 @keyframes fadeIn {
