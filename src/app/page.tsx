@@ -177,7 +177,6 @@ export default function HomePage() {
             <UnionCard
               key={union.id}
               name={union.name}
-              description={union.description}
               remainingQuota={remainingQuota}
               isSelected={isSelected}
               alreadySelectedRound={alreadySelectedRound}
