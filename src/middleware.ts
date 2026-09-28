@@ -2,9 +2,21 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
   const teamId = request.cookies.get('team_id')?.value
-  const isLoginPage = request.nextUrl.pathname === '/login'
-  const isAdminPage = request.nextUrl.pathname === '/admin'
+
+  if (
+    pathname.startsWith('/icon') ||
+    pathname.startsWith('/font') ||
+    pathname.endsWith('.svg') ||
+    pathname.endsWith('.otf') ||
+    pathname.endsWith('.ico')
+  ) {
+    return NextResponse.next()
+  }
+
+  const isLoginPage = pathname === '/login'
+  const isAdminPage = pathname.startsWith('/admin')
 
   if (!teamId && !isLoginPage && !isAdminPage) {
     return NextResponse.redirect(new URL('/login', request.url))
@@ -18,6 +30,7 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Защищаем всё, кроме статики, API и картинок
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: [
+    '/((?!api|_next/static|_next/image|icon|font|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|otf|ttf|woff|woff2)$).*)',
+  ],
 }

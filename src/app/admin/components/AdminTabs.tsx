@@ -1,4 +1,5 @@
 'use client'
+
 import { useState } from 'react'
 import { Users, MapPin } from 'lucide-react'
 import { AdminDashboard } from './AdminDashboard'
@@ -10,22 +11,24 @@ export function AdminTabs({ teamsData, unionsData }: any) {
   return (
     <div className="min-h-screen p-4 md:p-8 max-w-5xl mx-auto">
       {/* Навигация (Вкладки) */}
-      <div className="flex gap-2 mb-8 bg-white/5 p-1.5 rounded-xl w-fit border border-white/10 backdrop-blur-md">
+      <div className="flex gap-1.5 mb-8 glass-card p-1.5 rounded-2xl w-fit border-white/10">
         <button
+          type="button"
           onClick={() => setActiveTab('teams')}
-          className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 ${
+          className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
             activeTab === 'teams'
-              ? 'bg-fest-accent text-white shadow-[0_0_15px_rgba(217,70,239,0.4)]'
+              ? 'bg-[#415FFB] text-white shadow-[0_0_15px_rgba(65,95,251,0.6)]'
               : 'text-white/50 hover:text-white hover:bg-white/5'
           }`}
         >
           <Users className="w-4 h-4" /> Команды
         </button>
         <button
+          type="button"
           onClick={() => setActiveTab('unions')}
-          className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 ${
+          className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
             activeTab === 'unions'
-              ? 'bg-fest-blue text-white shadow-[0_0_15px_rgba(0,212,255,0.4)]'
+              ? 'bg-[#27CCD2] text-[#042222] shadow-[0_0_15px_rgba(39,204,210,0.5)]'
               : 'text-white/50 hover:text-white hover:bg-white/5'
           }`}
         >
@@ -34,7 +37,7 @@ export function AdminTabs({ teamsData, unionsData }: any) {
       </div>
 
       {/* Контент активной вкладки */}
-      <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+      <div className="animate-[fadeIn_0.25s_ease-out]">
         {activeTab === 'teams' ? (
           <AdminDashboard teamsData={teamsData} />
         ) : (

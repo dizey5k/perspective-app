@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+
 import { cn } from '@/lib/utils/utils'
 
 interface StepperProps {
@@ -16,38 +16,27 @@ export function RoundStepper({
   const rounds = [1, 2, 3, 4, 5, 6]
 
   return (
-    <div className="flex items-center w-full px-2 py-4">
-      {rounds.map((round, index) => {
+    <div className="glass-card p-1.5 rounded-2xl flex items-center justify-between gap-1 max-w-xl mx-auto w-full border-white/10">
+      {rounds.map((round) => {
         const isActive = currentRound === round
         const isCompleted = completedRounds.includes(round)
 
         return (
-          <React.Fragment key={round}>
-            {/* Кружок (flex-shrink-0 не дает ему сжиматься) */}
-            <button
-              onClick={() => onSelectRound(round)}
-              className={cn(
-                'flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300',
-                isActive
-                  ? 'bg-fest-accent/20 text-fest-accent border border-fest-accent shadow-[0_0_15px_rgba(217,70,239,0.5)]'
-                  : isCompleted
-                    ? 'bg-fest-blue/20 text-fest-blue border border-fest-blue'
-                    : 'bg-fest-surface text-white/50 border border-fest-border hover:bg-white/10',
-              )}
-            >
-              {round}
-            </button>
-
-            {/* Тянущаяся линия (flex-1 занимает всё свободное место) */}
-            {index < rounds.length - 1 && (
-              <div
-                className={cn(
-                  'flex-1 h-[2px] mx-2 transition-colors',
-                  isCompleted ? 'bg-fest-blue/50' : 'bg-fest-border',
-                )}
-              />
+          <button
+            key={round}
+            type="button"
+            onClick={() => onSelectRound(round)}
+            className={cn(
+              'flex-1 py-2 px-2 sm:px-4 rounded-xl text-xs font-bold transition-all duration-200 text-center whitespace-nowrap',
+              isActive
+                ? 'bg-[#415FFB] text-white shadow-[0_0_15px_rgba(65,95,251,0.6)]'
+                : isCompleted
+                  ? 'text-[#27CCD2] hover:bg-white/5'
+                  : 'text-white/50 hover:text-white/80 hover:bg-white/5',
             )}
-          </React.Fragment>
+          >
+            {round} Круг
+          </button>
         )
       })}
     </div>

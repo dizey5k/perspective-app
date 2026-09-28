@@ -1,57 +1,90 @@
-/* Подключаем Tailwind v4 */
 @import 'tailwindcss';
 
-/* Задаем нашу тему (Tailwind сам сгенерирует из них bg-fest-bg, text-fest-accent и т.д.) */
 @theme {
-  --color-fest-bg: #0a1519;
-  --color-fest-surface: #12252a;
-  --color-fest-border: rgba(255, 255, 255, 0.1);
-  --color-fest-accent: #d946ef;
-  --color-fest-blue: #3b82f6;
-  --color-fest-cyan: #06b6d4;
+  --font-sans:
+    var(--font-impulse), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+  --font-impulse: var(--font-impulse);
+
+  --color-fest-bg: #042222;
+  --color-fest-surface: rgba(4, 34, 34, 0.65);
+  --color-fest-border: rgba(39, 204, 210, 0.15);
+  --color-fest-accent: #f6affd;
+  --color-fest-cyan: #27ccd2;
+  --color-fest-blue: #415ffb;
+  --color-fest-navy: #3259a6;
 }
 
 body {
-  background-color: var(--color-fest-bg);
-  color: white;
+  background-color: #042222;
+  color: #ffffff;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Паттерн в виде тонкой сетки, как на макетах */
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
+  overflow-x: hidden;
 }
 
-/* Прячем скроллбар */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-/* Эффект стеклянной карточки (пишем на чистом CSS, чтобы не воевать с @apply) */
+/* Стеклянные карточки */
 .glass-card {
-  background-color: rgba(18, 37, 42, 0.6);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--color-fest-border);
+  background-color: rgba(4, 34, 34, 0.65);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1rem;
-  box-shadow:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
 
-/* Кастомное свечение на фоне */
-.bg-impulse-glow {
-  background-image: radial-gradient(
-    circle at center,
-    rgba(59, 130, 246, 0.3) 0%,
-    rgba(10, 21, 25, 0) 70%
+.glass-card-selected {
+  background: linear-gradient(
+    135deg,
+    rgba(65, 95, 251, 0.15),
+    rgba(246, 175, 253, 0.12)
   );
+  border: 1px solid rgba(246, 175, 253, 0.5);
+  box-shadow: 0 0 25px rgba(246, 175, 253, 0.2);
+}
+
+/* Центральное неоновое свечение */
+.bg-impulse-glow {
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 480px;
+  background: radial-gradient(
+    circle,
+    rgba(39, 204, 210, 0.35) 0%,
+    rgba(65, 95, 251, 0.28) 45%,
+    rgba(246, 175, 253, 0.18) 70%,
+    transparent 100%
+  );
+  filter: blur(75px);
+  pointer-events: none;
+}
+
+/* Круговые орбиты */
+.orbit-ring-1 {
+  position: absolute;
+  top: -240px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 760px;
+  height: 760px;
+  border: 1px dashed rgba(39, 204, 210, 0.18);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.orbit-ring-2 {
+  position: absolute;
+  top: -420px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1100px;
+  height: 1100px;
+  border: 1px solid rgba(246, 175, 253, 0.1);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 @keyframes fadeIn {

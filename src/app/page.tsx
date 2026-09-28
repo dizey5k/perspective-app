@@ -1,8 +1,9 @@
 'use client'
 
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import { CheckCircle2, Info, Lock } from 'lucide-react'
+import { Lock, CheckCircle2 } from 'lucide-react'
 import { useStore } from '@/store/useStore'
 import { useLiveQuotas } from '@/hooks/useLiveQuotas'
 import { fetchAppState, submitBooking, confirmSchedule } from '@/lib/api'
@@ -13,7 +14,6 @@ import { cn } from '@/lib/utils/utils'
 
 export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true)
-
   const [infoModalUnion, setInfoModalUnion] = useState<{
     name: string
     description?: string | null
@@ -40,9 +40,7 @@ export default function HomePage() {
   useEffect(() => {
     fetchAppState()
       .then((data) => {
-        if (data.team) {
-          setTeam(data.team)
-        }
+        if (data.team) setTeam(data.team)
         setUnions(data.unions)
         setQuotas(data.quotas)
         setMyBookings(data.myBookings || [])
@@ -68,7 +66,6 @@ export default function HomePage() {
       const res = await submitBooking(currentRound, unionId)
       if (res.success) {
         toast.success('Станция выбрана!')
-
         const newBookings = myBookings.filter(
           (b) => b.roundNumber !== currentRound,
         )
@@ -78,9 +75,7 @@ export default function HomePage() {
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : 'Сбой при выборе станции'
-      toast.error('Не удалось выбрать станцию', {
-        description: message,
-      })
+      toast.error('Не удалось выбрать станцию', { description: message })
     }
   }
 
@@ -88,65 +83,69 @@ export default function HomePage() {
     try {
       await confirmSchedule()
       setIsConfirmed(true)
-      toast.success('Расписание зафиксировано!', {
-        description:
-          'Ваш маршрут успешно сохранен и больше не может быть изменен.',
-      })
+      toast.success('Расписание зафиксировано!')
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : 'Сбой при сохранении маршрута'
-      toast.error('Не удалось зафиксировать расписание', {
-        description: message,
-      })
+      const message = err instanceof Error ? err.message : 'Сбой сохранения'
+      toast.error('Ошибка', { description: message })
     }
   }
 
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-fest-accent border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-[#27CCD2] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
 
   const completedRounds = myBookings.map((b) => b.roundNumber)
   const isAllSelected = completedRounds.length === 6
-
-  // Получаем имя команды для приветствия
   const teamDisplayName =
     typeof team === 'string'
       ? team
       : (team as { name?: string } | null)?.name || 'Команда'
 
   return (
-    <div className="relative min-h-screen pb-32 flex flex-col">
-      {/* Шапка */}
-      <header className="pt-8 pb-4 px-4 text-center z-10">
-        {/* Исправленное приветствие команды */}
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/80 mb-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-fest-accent animate-pulse" />
-          <span>
-            Добро пожаловать, Лидеры{' '}
-            <b className="text-white">{teamDisplayName}</b>!
+    <div className="pb-36 pt-6">
+      {/* Верхний бар */}
+      <header className="flex items-center justify-between pb-8">
+        <div className="flex items-center gap-3">
+          <Image
+            src="/icon/logo.svg"
+            alt="ПРОФ Логотип"
+            width={70}
+            height={70}
+            loading="eager"
+            fetchPriority="high"
+            className="w-12 h-12 object-contain drop-shadow-[0_0_10px_rgba(39,204,210,0.4)]"
+          />
+        </div>
+
+        {/* Плашка команды */}
+        <div className="glass-card px-4 py-1.5 rounded-full flex items-center gap-2 border-[#27CCD2]/30 text-xs">
+          <span className="w-2 h-2 rounded-full bg-[#27CCD2] animate-pulse" />
+          <span className="text-white/60">Команда:</span>
+          <span className="font-bold text-white tracking-wide">
+            {teamDisplayName}
           </span>
         </div>
-
-        <p className="text-fest-accent text-xs font-bold tracking-widest uppercase mb-2">
-          XXVIII Студенческая Перспектива
-        </p>
-        <h1 className="text-4xl font-extrabold text-white tracking-tight uppercase drop-shadow-[0_0_15px_rgba(217,70,239,0.5)]">
-          Импульс
-        </h1>
-        <p className="text-white/60 text-sm mt-2 font-medium">
-          Движение начинается с тебя
-        </p>
       </header>
 
+      {/* Hero-секция */}
+      <section className="text-center pt-2 pb-6">
+        <p className="text-xs uppercase tracking-[0.35em] text-[#F6AFFD] font-bold mb-3">
+          XXVIII Студенческая Перспектива
+        </p>
+        <h1 className="text-5xl md:text-7xl font-black uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-[#27CCD2] to-[#F6AFFD] drop-shadow-[0_0_30px_rgba(39,204,210,0.35)]">
+          Импульс
+        </h1>
+        <p className="text-xs md:text-sm text-white/70 mt-3 font-medium tracking-[0.2em] uppercase">
+          Достаточно лишь импульса, чтобы начать
+        </p>
+      </section>
+
       {/* Степпер */}
-      <div className="sticky top-0 z-20 bg-fest-bg/80 backdrop-blur-md px-4 py-2 border-b border-white/5">
-        <div className="mb-2 text-center text-sm font-semibold text-white/80">
-          Круг {currentRound} из 6
-        </div>
+      <div className="mb-8">
         <RoundStepper
           currentRound={currentRound}
           completedRounds={completedRounds}
@@ -154,30 +153,16 @@ export default function HomePage() {
         />
       </div>
 
-      {/* Информационная подсказка */}
-      <div className="px-4 mt-4 z-10">
-        <div className="glass-card bg-fest-blue/5 border-fest-blue/20 p-4 flex gap-3 items-start">
-          <Info className="w-5 h-5 text-fest-blue shrink-0 mt-0.5" />
-          <p className="text-sm text-white/80 leading-relaxed">
-            В каждом круге можно выбрать только <b>одну</b> станцию. Чтобы
-            изменить решение — просто выберите другую карточку. После нажатия
-            «Подтвердить расписание» изменения станут недоступны.
-          </p>
-        </div>
-      </div>
-
-      {/* Список карточек */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4 mt-6 z-10">
+      {/* Сетка карточек */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {unions.map((union) => {
           const quotaInfo = quotas.find(
             (q) => q.unionId === union.id && q.roundNumber === currentRound,
           )
           const remainingQuota = quotaInfo?.remainingQuota ?? 0
-
           const isSelected = myBookings.some(
             (b) => b.roundNumber === currentRound && b.unionId === union.id,
           )
-
           const bookingInOtherRound = myBookings.find(
             (b) => b.roundNumber !== currentRound && b.unionId === union.id,
           )
@@ -207,32 +192,47 @@ export default function HomePage() {
         })}
       </div>
 
-      {/* Панель подтверждения */}
-      <div
-        className={cn(
-          'fixed bottom-0 left-0 right-0 p-4 bg-fest-bg/90 backdrop-blur-xl border-t border-fest-border z-30 transition-transform duration-500',
-          isAllSelected || isConfirmed ? 'translate-y-0' : 'translate-y-full',
-        )}
-      >
-        <div className="max-w-md mx-auto">
+      {/* Фиксированный нижний статус-бар */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-[#042222]/90 backdrop-blur-xl border-t border-white/10 z-30">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2.5">
+            <span
+              className={cn(
+                'w-2.5 h-2.5 rounded-full',
+                isAllSelected ? 'bg-[#27CCD2]' : 'bg-[#F6AFFD]',
+              )}
+            />
+            <span className="text-xs sm:text-sm text-white/80">
+              Заполнено <b>{completedRounds.length} из 6</b> станций маршрута
+            </span>
+          </div>
+
           {isConfirmed ? (
-            <div className="w-full py-3.5 rounded-xl flex items-center justify-center gap-2 font-bold bg-green-500/20 text-green-400 border border-green-500/30">
-              <CheckCircle2 className="w-5 h-5" />
+            <div className="px-6 py-2.5 rounded-xl flex items-center gap-2 font-bold bg-[#27CCD2]/20 text-[#27CCD2] border border-[#27CCD2]/40 text-xs uppercase tracking-wider">
+              <CheckCircle2 className="w-4 h-4" />
               <span>Расписание зафиксировано</span>
             </div>
           ) : (
             <button
               onClick={handleConfirm}
-              className="w-full py-3.5 rounded-xl flex items-center justify-center gap-2 font-bold text-white bg-gradient-to-r from-fest-accent to-fest-blue shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:opacity-90 active:scale-95 transition-all"
+              disabled={!isAllSelected}
+              className={cn(
+                'w-full sm:w-auto px-8 py-3 rounded-xl font-black text-xs uppercase tracking-wider transition-all duration-300',
+                isAllSelected
+                  ? 'bg-gradient-to-r from-[#415FFB] via-[#27CCD2] to-[#F6AFFD] text-[#042222] shadow-[0_0_25px_rgba(39,204,210,0.5)] hover:opacity-95 active:scale-95'
+                  : 'bg-white/10 text-white/40 cursor-not-allowed',
+              )}
             >
-              <Lock className="w-5 h-5" />
-              <span>Подтвердить расписание</span>
+              <span className="flex items-center justify-center gap-2">
+                <Lock className="w-4 h-4" />
+                <span>Зафиксировать расписание</span>
+              </span>
             </button>
           )}
         </div>
       </div>
 
-      {/* Модальное окно с описанием */}
+      {/* Модалка */}
       <UnionInfoModal
         isOpen={Boolean(infoModalUnion)}
         onClose={() => setInfoModalUnion(null)}
