@@ -21,11 +21,12 @@ const instituteConfigs = [
   { prefix: 'ie', name: 'ИЭ', count: 5 },
   { prefix: 'immit', name: 'ИММиТ', count: 6 },
   { prefix: 'ipmeit', name: 'ИПМЭиТ', count: 9 },
-  { prefix: 'gi', name: 'ГИ', count: 3 },
+  { prefix: 'gi', name: 'ГИ', count: 4 },
   { prefix: 'ibsib', name: 'ИБСиБ', count: 2 },
   { prefix: 'fizmeh', name: 'ФизМех', count: 5 },
   { prefix: 'iknk', name: 'ИКНК', count: 9 },
   { prefix: 'ispo', name: 'ИСПО', count: 5 },
+  { prefix: 'ieit', name: 'ИЭиТ', count: 3 },
 ]
 
 const HIGH_CAPACITY_STATIONS = [
