@@ -7,7 +7,6 @@ interface UnionInfoModalProps {
   isOpen: boolean
   onClose: () => void
   name: string
-  description?: string | null
   fullDescription?: string | null
 }
 
@@ -15,7 +14,6 @@ export function UnionInfoModal({
   isOpen,
   onClose,
   name,
-  description,
   fullDescription,
 }: UnionInfoModalProps) {
   useEffect(() => {
@@ -58,9 +56,6 @@ export function UnionInfoModal({
             <h3 className="text-xl font-extrabold text-white mt-0.5 leading-snug">
               {name}
             </h3>
-            {description && (
-              <p className="text-xs text-white/50 mt-1">{description}</p>
-            )}
           </div>
 
           <button
@@ -75,7 +70,7 @@ export function UnionInfoModal({
 
         {/* Контент с плавной прокруткой */}
         <div className="mt-4 overflow-y-auto pr-1 text-sm leading-relaxed text-white/85 whitespace-pre-line space-y-3 font-normal">
-          {fullDescription || description || 'Описание скоро появится.'}
+          {fullDescription || 'Описание скоро появится.'}
         </div>
 
         {/* Нижняя кнопка */}
